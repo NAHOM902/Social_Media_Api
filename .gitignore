@@ -1,0 +1,24 @@
+# .gitignore
+# Python
+*.pyc
+__pycache__/
+venv/
+env/
+myenv/
+*.sqlite3
+
+# Django
+*.log
+*.pot
+*.py[co]
+*.mo
+*.db
+*.sqlite3
+
+# Environment variables
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
