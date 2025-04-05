@@ -4,12 +4,12 @@ from phonenumber_field.serializerfields import PhoneNumberField
 
 
 
-
 class RegistrationSerializer(serializers.ModelSerializer):
 
     username = serializers.CharField(max_length=25)
     email = serializers.CharField(max_length=80)
-    password = serializers.CharField(min_length=5)
+    password = serializers.CharField(min_length=4,
+                                     write_only=True)
     phone_number = PhoneNumberField(allow_null=False, allow_blank=False)
 
     class Meta:
@@ -33,3 +33,5 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
 
         return super().validate(attrs)
+    
+   

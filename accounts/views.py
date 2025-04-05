@@ -17,6 +17,7 @@ class RegisterViews(generics.GenericAPIView):
 
     def post(self, request):
         data = request.data
+        
 
         serializer = self.serializer_class(data=data)
         if serializer.is_valid():
