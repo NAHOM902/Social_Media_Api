@@ -13,10 +13,11 @@ from django.utils import timezone
 
 class CustomUserManager(BaseUserManager):
 
-    def creat_user(self, email, password, **extra_fields):
+    def create_user(self, email, password, **extra_fields):
         if not email:
             raise ValueError(_("email must be provided!!"))
         email = self.normalize_email(email)
+        extra_fields.setdefault('is_active', True) 
 
         new_user = self.model(email=email, **extra_fields)
         new_user.set_password(password)

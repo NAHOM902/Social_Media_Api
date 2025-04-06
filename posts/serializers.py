@@ -25,3 +25,18 @@ class PostDetailserializer(serializers.ModelSerializer):
         depth = 1  #shows authors username..
 
         
+
+        #  SERALIZER CLASS FOR FOLLOWERS
+
+class FollowSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'followers', 'following']
+        read_only_fields = ['id', 'username', 'followers']
+
+    def update(self, instance, validated_data):
+        # Only allow updates to the `following` field
+        following = validated_data.pop('following', [])
+        instance.following.set(following)
+        return instance

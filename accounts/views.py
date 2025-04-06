@@ -6,10 +6,7 @@ from rest_framework.response import Response
 from rest_framework import serializers
 
 
-class Auth_Views(generics.GenericAPIView):
-    def get(self, request):
-        return Response(data={"message":"This is the authentication generic veiws"}, status=status.HTTP_200_OK)
-    
+
 
 class RegisterViews(generics.GenericAPIView):
 

@@ -1,8 +1,12 @@
 from rest_framework import serializers
 from .models import User
 from phonenumber_field.serializerfields import PhoneNumberField
+from django.contrib.auth import get_user_model
 
 
+
+
+User = get_user_model()
 
 class RegistrationSerializer(serializers.ModelSerializer):
 
@@ -34,4 +38,13 @@ class RegistrationSerializer(serializers.ModelSerializer):
 
         return super().validate(attrs)
     
-   
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            username=validated_data['username'],
+            email=validated_data['email'],
+            phone_number=validated_data['phone_number'],
+            password=validated_data['password']  # Password is hashed
+        )
+        user.is_active = True
+        user.save()
+        return user

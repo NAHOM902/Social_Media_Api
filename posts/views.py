@@ -3,11 +3,16 @@ from rest_framework import generics, status, permissions
 from rest_framework.response import Response
 from .models import Post
 from rest_framework import serializers
-from .serializers import Postserializer, PostDetailserializer
+from .serializers import Postserializer, PostDetailserializer, FollowSerializer
 from accounts.views import User
 from rest_framework.decorators import api_view
+from rest_framework.generics import ListAPIView, UpdateAPIView
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from django.contrib.auth import get_user_model
 
 
+
+User = get_user_model()
 
 
         # CRUD OPERATIONS  👇
@@ -98,3 +103,91 @@ class PostDetailView(generics.GenericAPIView):
 
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+
+
+class UserPostView(generics.GenericAPIView):
+    serializer_class = PostDetailserializer
+
+    def get(self, request, user_id):
+        try:
+            user = User.objects.get(pk=user_id)
+            posts = Post.objects.filter(author=user)  # Assuming Post has an author field
+            serializer = self.get_serializer(posts, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response(
+                {"error": "User not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+
+class UserPostDetail(generics.GenericAPIView):
+    
+    serializer_class = PostDetailserializer
+
+    def get(self, reqeust, user_id, post_id):
+        try:
+            user = User.objects.get(pk=user_id)
+            posts = Post.objects.filter(author=user).filter(pk=post_id)
+            serializer = self.get_serializer(posts, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        except User.DoesNotExist:
+            return Response(
+                {"error": "User not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )  
+
+
+
+
+
+    # ------------------_________________________FOLLOWERS SECTION USING GENERICS VIEWS_______________________-----------------------------
+
+# view for following a user
+
+class FollowUserView(generics.GenericAPIView):
+    queryset = User.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def post(self, request, user_id, *args, **kwargs):
+        try:
+            user_to_follow = User.objects.get(pk=user_id) #Get the user to follow
+            if user_to_follow == request.user:
+                return Response({'error': "You can not  follow yourself"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            request.user.following.add(user_to_follow)
+            return Response({"success": f"You are now following {user_to_follow.username}."}, status=status.HTTP_200_OK)
+    
+
+        except User.DoesNotExist:
+            return Response({'error': "User not found"}, status=status.HTTP_404_NOT_FOUND)
+
+# view for unfollowing a user
+
+class UnfollowUserView(generics.GenericAPIView):
+    queryset = User.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, user_id, *args, **kwargs):
+        try:
+            user_to_unfollow = User.objects.get(pk=user_id)#Get the user
+            if user_to_unfollow == request.user:
+                return Response({"error": "You can not unfollow yourself"}, status=status.HTTP_400_BAD_REQUEST)
+            
+            request.user.following.remove(user_to_unfollow)
+            return Response({"success": f"You have unfollow {user_to_unfollow.username}."}, status=status.HTTP_200_OK)
+        
+        except User.DoesNotExist:
+            return Response({"error": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        
+
+# view for listing all users th current user is following
+class UserFollowingListView(ListAPIView):
+    
+    serializer_class = FollowSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.request.user.following.all() #Retrive the users being followed
