@@ -9,3 +9,7 @@ pillow
 PyJWT==2.9.0
 pycparser==2.22
 sqlparse==0.5.3
+gunicorn-23.0.0
+drf_yasg
+psycopg2-binary
+whitenoise

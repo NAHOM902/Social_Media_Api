@@ -1,0 +1,2 @@
+release: python manage.py migrate
+web guticorn Social_Media_api.wsgi --lg-file
