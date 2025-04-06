@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from rest_framework import generics, status, permissions
 from rest_framework.response import Response
-from .models import Post
+from .models import Post, Follow
 from rest_framework import serializers
 from .serializers import Postserializer, PostDetailserializer, FollowSerializer
 from accounts.views import User
@@ -148,18 +148,21 @@ class UserPostDetail(generics.GenericAPIView):
 # view for following a user
 
 class FollowUserView(generics.GenericAPIView):
-    queryset = User.objects.all()
     permission_classes = [permissions.IsAuthenticated]
-    
+
     def post(self, request, user_id, *args, **kwargs):
         try:
-            user_to_follow = User.objects.get(pk=user_id) #Get the user to follow
+            user_to_follow = User.objects.get(pk=user_id)
+
             if user_to_follow == request.user:
-                return Response({'error': "You can not  follow yourself"}, status=status.HTTP_400_BAD_REQUEST)
-            
-            request.user.following.add(user_to_follow)
-            return Response({"success": f"You are now following {user_to_follow.username}."}, status=status.HTTP_200_OK)
-    
+                return Response({'error': "You cannot follow yourself"}, status=status.HTTP_400_BAD_REQUEST)
+
+            # Check if already following
+            if Follow.objects.filter(follower=request.user, following=user_to_follow).exists():
+                return Response({'message': 'You are already following this user'}, status=status.HTTP_400_BAD_REQUEST)
+
+            Follow.objects.create(follower=request.user, following=user_to_follow)
+            return Response({"success": f"You are now following {user_to_follow.username}."}, status=status.HTTP_201_CREATED)
 
         except User.DoesNotExist:
             return Response({'error': "User not found"}, status=status.HTTP_404_NOT_FOUND)
@@ -185,9 +188,8 @@ class UnfollowUserView(generics.GenericAPIView):
 
 # view for listing all users th current user is following
 class UserFollowingListView(ListAPIView):
-    
     serializer_class = FollowSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return self.request.user.following.all() #Retrive the users being followed
+        return User.objects.filter(followers__follower=self.request.user)
