@@ -40,7 +40,7 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get('is_active') is not True:
             raise ValueError(_("superuser should have is_active as True"))
         
-        return self.creat_user(email, password, **extra_fields)
+        return self.create_user(email, password, **extra_fields)
     
 
 
