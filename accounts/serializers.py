@@ -43,8 +43,9 @@ class RegistrationSerializer(serializers.ModelSerializer):
             username=validated_data['username'],
             email=validated_data['email'],
             phone_number=validated_data['phone_number'],
-            password=validated_data['password']  # Password is hashed
+            
         )
+        user.set_password(validated_data['password'])
         user.is_active = True
         user.save()
         return user

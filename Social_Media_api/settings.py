@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'djoser',
     'rest_framework_simplejwt',
+    'drf_yasg',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -52,7 +53,7 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
     'ACCES_TOKEN_LIFETIME': timedelta(days=7),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 
 }
 
@@ -62,7 +63,15 @@ DJOSER = {
     "USER_CREATE_PASSWORD_RETYPE": True,
 }
 
-
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+      'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+      }
+   }
+}
 
 
 MIDDLEWARE = [

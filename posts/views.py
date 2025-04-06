@@ -7,8 +7,9 @@ from .serializers import Postserializer, PostDetailserializer, FollowSerializer
 from accounts.views import User
 from rest_framework.decorators import api_view
 from rest_framework.generics import ListAPIView, UpdateAPIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from django.contrib.auth import get_user_model
+from drf_yasg.utils import swagger_auto_schema 
 
 
 
@@ -22,9 +23,11 @@ class PostCreateView(generics.GenericAPIView):
 
     queryset = Post.objects.all()
     serializer_class = Postserializer
-    permission_classes = [permissions.IsAuthenticated]  
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]  
 
    # GETS ALL POSTS AVAILABLE ...
+
+    @swagger_auto_schema(operation_summary="List all Posts made ")
 
     def get(self, request):
         posts = Post.objects.all()
@@ -34,7 +37,9 @@ class PostCreateView(generics.GenericAPIView):
     
 
    # CREATAE A POST...
-    
+
+    @swagger_auto_schema(operation_summary="Create a new post ")
+
     def post(self, request):
         serializer = self.serializer_class(
 
@@ -60,9 +65,11 @@ class PostCreateView(generics.GenericAPIView):
 class PostDetailView(generics.GenericAPIView):
 
     serializer_class = PostDetailserializer
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = [IsAdminUser]
 
    # GETS DETAIL VIEW WITH AN ID
+
+    @swagger_auto_schema(operation_summary="Retrive a post by it's id")
 
     def get(self, request, post_id):
 
@@ -73,6 +80,9 @@ class PostDetailView(generics.GenericAPIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     # UPDATES A POST WITH A SPECIFIC ID
+
+    @swagger_auto_schema(operation_summary="update a post by it's id")
+
 
     def put(self, request, post_id):
 
@@ -96,6 +106,8 @@ class PostDetailView(generics.GenericAPIView):
     
    # DELETE A POST WITH AN ID
 
+    @swagger_auto_schema(operation_summary="Delete a post by it's id")
+
     def delete(self, request, post_id):
         post = get_object_or_404(Post, pk=post_id)
         
@@ -109,6 +121,8 @@ class PostDetailView(generics.GenericAPIView):
 
 class UserPostView(generics.GenericAPIView):
     serializer_class = PostDetailserializer
+    
+    @swagger_auto_schema(operation_summary="Get all posts for a user")
 
     def get(self, request, user_id):
         try:
@@ -124,8 +138,10 @@ class UserPostView(generics.GenericAPIView):
 
 
 class UserPostDetail(generics.GenericAPIView):
-    
+
     serializer_class = PostDetailserializer
+
+    @swagger_auto_schema(operation_summary="GET a user's specific post")
 
     def get(self, reqeust, user_id, post_id):
         try:
@@ -149,6 +165,8 @@ class UserPostDetail(generics.GenericAPIView):
 
 class FollowUserView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
+      
+    @swagger_auto_schema(tags=["Follow"])
 
     def post(self, request, user_id, *args, **kwargs):
         try:
@@ -173,6 +191,9 @@ class UnfollowUserView(generics.GenericAPIView):
     queryset = User.objects.all()
     permission_classes = [permissions.IsAuthenticated]
 
+    @swagger_auto_schema(tags=["Follow"])
+
+
     def post(self, request, user_id, *args, **kwargs):
         try:
             user_to_unfollow = User.objects.get(pk=user_id)#Get the user
@@ -190,6 +211,9 @@ class UnfollowUserView(generics.GenericAPIView):
 class UserFollowingListView(ListAPIView):
     serializer_class = FollowSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+    @swagger_auto_schema(tags=["Follow"])
+
 
     def get_queryset(self):
         return User.objects.filter(followers__follower=self.request.user)
