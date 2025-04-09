@@ -49,10 +49,9 @@ class User(AbstractUser):
     username = models.CharField(max_length=50)
     email = models.EmailField(max_length=80, unique=True)
     phone_number = PhoneNumberField(null=False, unique=True)
-    bio = models.TextField(max_length=100, blank=True)
-    profile_picture = models.URLField(blank=True)
     date_joined = models.DateTimeField(default=timezone.now)
 
+#this the user base model
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'phone_number']
