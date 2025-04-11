@@ -108,5 +108,5 @@ MySQL
 
 **Contact**
 For questions or Support, feel free to contact:<hr/>
-Nahom Belayneh Abrah <br>
+Nahom Belayneh Abrha <br>
 Email: nahombelayneh387@gmail.com
