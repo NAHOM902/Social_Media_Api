@@ -2,6 +2,11 @@
 
 This project is a RESTful API for a social media platform designed to handle essential features such as user registration, login, posts, . It provides a secure and scalable backend using JWT token-based authentication.
 
+![image alt](https://github.com/NAHOM902/Social_Media_Api/blob/main/image_2025-04-11_16-23-15.png?raw=true)
+![image alt](https://github.com/NAHOM902/Social_Media_Api/blob/main/image_2025-04-11_16-24-10.png?raw=true)
+![image alt](https://github.com/NAHOM902/Social_Media_Api/blob/main/image_2025-04-11_16-25-46.png?raw=true)
+
+
 ## 📌 Features
 
 - **User Management ✔️**
@@ -55,7 +60,7 @@ This project is a RESTful API for a social media platform designed to handle ess
 - `following/`
 
 
-### **Likes Endpoints ❌**
+### **Likes Endpoints ✔️**
 - **Like a Post:**  
   `POST /api/posts/{id}/like/`  
 - **Unlike a Post:**  
