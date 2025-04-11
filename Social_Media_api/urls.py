@@ -28,10 +28,10 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/login', TokenObtainPairView.as_view(), name='login'),  # access to the token 
     path('api/', include('accounts.urls')), 
     path('', include('posts.urls')),    
     path('auth/', include('djoser.urls.jwt')),    # auth/jwt/refresh, auth/jwt/verify 
-    path('api/login', TokenObtainPairView.as_view(), name='login'),  # access to the token 
     path('auth/refresh-token', TokenRefreshView.as_view(), name='refreshtoken'),
 
    path('swagger<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),

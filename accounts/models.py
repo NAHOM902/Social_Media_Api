@@ -50,6 +50,7 @@ class User(AbstractUser):
     email = models.EmailField(max_length=80, unique=True)
     phone_number = PhoneNumberField(null=False, unique=True)
     date_joined = models.DateTimeField(default=timezone.now)
+    
 
 #this the user base model
 

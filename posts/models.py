@@ -8,7 +8,7 @@ class Post(models.Model):
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     bio = models.TextField(max_length=100, blank=True)
-    profile_picture = models.URLField(blank=True)
+    media = models.URLField(blank=True)
 
     def __str__(self):
         return f"posted by {self.author.username} - {self.timestamp}"

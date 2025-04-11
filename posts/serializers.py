@@ -9,7 +9,7 @@ class Postserializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['post_id', 'author', 'content', 'bio', 'profile_picture', 'timestamp']
+        fields = ['post_id', 'author', 'content', 'bio', 'media', 'timestamp']
         read_only_fields = ['author', 'timestamp']  #this fields can't be set by api users
         depth = 1  #shows authors username..
 

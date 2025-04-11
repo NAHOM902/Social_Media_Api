@@ -194,17 +194,18 @@ class UnfollowUserView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     @swagger_auto_schema(tags=["Follow"])
-
-
     def post(self, request, user_id, *args, **kwargs):
         try:
             user_to_unfollow = User.objects.get(pk=user_id)#Get the user
             if user_to_unfollow == request.user:
                 return Response({"error": "You can not unfollow yourself"}, status=status.HTTP_400_BAD_REQUEST)
-            
-            request.user.following.remove(user_to_unfollow)
-            return Response({"success": f"You have unfollow {user_to_unfollow.username}."}, status=status.HTTP_200_OK)
-        
+            follow_instance = Follow.objects.filter(follower=request.user, following=user_to_unfollow).first()
+            if not follow_instance:
+                return Response({"error": "You are not following this user"}, status=status.HTTP_400_BAD_REQUEST)
+
+            follow_instance.delete()
+            return Response({"success": f"You have unfollowed {user_to_unfollow.username}."}, status=status.HTTP_200_OK)
+
         except User.DoesNotExist:
             return Response({"error": "User does not exist"}, status=status.HTTP_404_NOT_FOUND)
         
@@ -275,7 +276,7 @@ class LikeCreateApiView(APIView):
 
             # Extract data to show nice message
             data = serializer.data
-            msg = f"{data['author_username']} liked post 🤙 '{data['post_id']}' created by {data['post_author']}"
+            msg = f"{data['author_username']} liked  this spost 🤙 '{data['post_id']}' created by {data['post_author']}"
             return Response({"message": msg}, status=status.HTTP_201_CREATED)
         
         except Post.DoesNotExist:
@@ -299,7 +300,7 @@ class unlike(generics.GenericAPIView):
                 return Response({"error": "You haven't liked this post"}, status=status.HTTP_400_BAD_REQUEST)
 
             # Remove the like
-            like.delete()
+            likes.delete()
 
             return Response({"success": "Post unliked successfully"}, status=status.HTTP_200_OK)
 
