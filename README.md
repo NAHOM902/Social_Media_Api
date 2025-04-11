@@ -4,10 +4,10 @@ This project is a RESTful API for a social media platform designed to handle ess
 
 
 <p align="center">
-   <img src="https://github.com/NAHOM902/Social_Media_Api/blob/main/image_2025-04-11_16-23-15.png?raw=true" alt="image 1" width="300"/>
-   <img src="https://github.com/NAHOM902/Social_Media_Api/blob/main/image_2025-04-11_16-24-10.png?raw=true" alt="image 2" width="300"/>
+   <img src="https://github.com/NAHOM902/Social_Media_Api/blob/main/image_2025-04-11_16-23-15.png?raw=true" alt="image 1" width="400"/>
+   <img src="https://github.com/NAHOM902/Social_Media_Api/blob/main/image_2025-04-11_16-24-10.png?raw=true" alt="image 2" width="400"/>
 </p>
-![image alt](https://github.com/NAHOM902/Social_Media_Api/blob/main/image_2025-04-11_16-25-46.png?raw=true)
+
 
 ## 📌 Features
 
