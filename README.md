@@ -107,7 +107,6 @@ Token-based Authentication
 MySQL
 
 **Contact**
-For questions or Support, feel free to contact:
-
-Name: Nahom Belayneh Abrah
+For questions or Support, feel free to contact:<hr/>
+Nahom Belayneh Abrah <br>
 Email: nahombelayneh387@gmail.com
